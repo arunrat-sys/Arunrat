@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Todo List</title>
+
+  <!-- Google Fonts - ฟอนต์น่ารักแนวญี่ปุ่น -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================================ */
+    /* Cute Mode - ธีมสีโอรสชมพูแนวญี่ปุ่น         */
+    /* ============================================ */
+
+    :root {
+      /* พาเลทสีโอรสชมพู */
+      --pink-light: #fff0f3;
+      --pink-soft: #ffd6e0;
+      --pink-main: #ff8fab;
+      --pink-accent: #ff6b8a;
+      --pink-dark: #e05578;
+      --cream: #fffaf5;
+      --text-main: #5a3e4b;
+      --text-light: #b08a99;
+      --white-card: #ffffff;
+      --shadow-pink: rgba(255, 143, 171, 0.25);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      /* ฟอนต์กลมน่ารัก + พื้นหลังสีชมพูอ่อน */
+      font-family: 'M PLUS Rounded 1c', 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, var(--pink-light) 0%, #fce4ec 50%, #fff0f3 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px;
+
+      /* ลายจุดพื้นหลังสไตล์ญี่ปุ่น */
+      background-image:
+        radial-gradient(circle, var(--pink-soft) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    /* ============================================ */
+    /* Container หลัก - การ์ดกลมมน                  */
+    /* ============================================ */
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background: var(--white-card);
+      border-radius: 24px;
+      padding: 32px 28px;
+      box-shadow:
+        0 8px 32px var(--shadow-pink),
+        0 2px 8px rgba(0, 0, 0, 0.04);
+      border: 2px solid var(--pink-soft);
+      height: fit-content;
+    }
+
+    /* ============================================ */
+    /* หัวข้อ - พร้อมไอคอนดอกไม้                    */
+    /* ============================================ */
+    h1 {
+      text-align: center;
+      margin-bottom: 24px;
+      color: var(--pink-accent);
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    /* ดอกซากุระประดับหัวข้อ */
+    h1::before {
+      content: '\1F338';
+      margin-right: 8px;
+    }
+    h1::after {
+      content: '\1F338';
+      margin-left: 8px;
+    }
+
+    /* ============================================ */
+    /* ฟอร์มเพิ่ม todo - ช่อง input + ปุ่ม          */
+    /* ============================================ */
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .input-group input {
+      flex: 1;
+      padding: 12px 18px;
+      border: 2px solid var(--pink-soft);
+      border-radius: 50px;  /* มนกลม kawaii */
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      background: var(--cream);
+      color: var(--text-main);
+      transition: all 0.3s;
+    }
+
+    .input-group input::placeholder {
+      color: var(--text-light);
+    }
+
+    /* เมื่อ focus ให้เรืองแสงชมพู */
+    .input-group input:focus {
+      border-color: var(--pink-main);
+      box-shadow: 0 0 0 3px rgba(255, 143, 171, 0.2);
+      background: #fff;
+    }
+
+    /* ปุ่มเพิ่ม - กลมน่ารัก */
+    .input-group button {
+      padding: 12px 22px;
+      background: linear-gradient(135deg, var(--pink-main), var(--pink-accent));
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px var(--shadow-pink);
+    }
+
+    .input-group button:hover {
+      background: linear-gradient(135deg, var(--pink-accent), var(--pink-dark));
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px var(--shadow-pink);
+    }
+
+    .input-group button:active {
+      transform: translateY(0);
+    }
+
+    /* ============================================ */
+    /* รายการ todo                                  */
+    /* ============================================ */
+    .todo-list {
+      list-style: none;
+    }
+
+    /* แต่ละ todo item - การ์ดมนๆ */
+    .todo-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: var(--cream);
+      border-radius: 16px;
+      margin-bottom: 10px;
+      border: 1.5px solid var(--pink-soft);
+      transition: all 0.2s;
+    }
+
+    /* Hover effect น่ารัก */
+    .todo-item:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px var(--shadow-pink);
+      border-color: var(--pink-main);
+    }
+
+    /* ============================================ */
+    /* Checkbox - สไตล์หัวใจ                        */
+    /* ============================================ */
+    .todo-item input[type="checkbox"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--pink-main);
+      border-radius: 50%;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s;
+      flex-shrink: 0;
+      background: white;
+    }
+
+    /* เมื่อ check แล้ว แสดงเครื่องหมายหัวใจ */
+    .todo-item input[type="checkbox"]:checked {
+      background: var(--pink-main);
+      border-color: var(--pink-main);
+    }
+
+    .todo-item input[type="checkbox"]:checked::after {
+      content: '\2764';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 12px;
+      color: white;
+    }
+
+    /* ข้อความ todo */
+    .todo-item span {
+      flex: 1;
+      font-size: 0.95rem;
+      word-break: break-word;
+      color: var(--text-main);
+      transition: all 0.3s;
+    }
+
+    /* เมื่อเสร็จแล้ว - ขีดฆ่า + จาง */
+    .todo-item.completed span {
+      text-decoration: line-through;
+      color: var(--text-light);
+    }
+
+    .todo-item.completed {
+      opacity: 0.65;
+    }
+
+    /* ============================================ */
+    /* ปุ่มลบ - วงกลมเล็กน่ารัก                    */
+    /* ============================================ */
+    .todo-item .delete-btn {
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      background: transparent;
+      color: var(--pink-main);
+      border: 1.5px solid var(--pink-soft);
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .todo-item .delete-btn:hover {
+      background: var(--pink-accent);
+      color: white;
+      border-color: var(--pink-accent);
+      transform: rotate(90deg);
+    }
+
+    /* ============================================ */
+    /* ข้อความเมื่อไม่มี todo                       */
+    /* ============================================ */
+    .empty-message {
+      text-align: center;
+      color: var(--text-light);
+      padding: 40px 20px;
+      font-size: 1rem;
+    }
+
+    /* ============================================ */
+    /* สรุปจำนวน - แถบด้านล่าง                      */
+    /* ============================================ */
+    .summary {
+      text-align: center;
+      margin-top: 18px;
+      padding: 10px;
+      color: var(--text-light);
+      font-size: 0.85rem;
+      background: var(--pink-light);
+      border-radius: 50px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- หัวข้อแอป -->
+    <h1>My Todo List</h1>
+
+    <!-- ฟอร์มเพิ่ม todo ใหม่ -->
+    <div class="input-group">
+      <input
+        type="text"
+        id="todo-input"
+        placeholder="Add a new task..."
+        autocomplete="off"
+      >
+      <button id="add-btn">Add</button>
+    </div>
+
+    <!-- รายการ todo -->
+    <ul class="todo-list" id="todo-list"></ul>
+
+    <!-- สรุปจำนวน todo ที่ยังไม่เสร็จ -->
+    <p class="summary" id="summary"></p>
+  </div>
+
+  <!-- โหลด JavaScript ที่ท้าย body -->
+  <script src="/app.js"></script>
+</body>
+</html>
